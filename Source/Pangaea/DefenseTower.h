@@ -15,9 +15,16 @@ public:
 	// Sets default values for this actor's properties
 	ADefenseTower();
 
-	int HealthPoints = 100;
-	int ShellDefense = 2;
-	float AttackRange = 15.0f;
+	UPROPERTY(EditAnywhere, Category = "Tower Params")
+	int HealthPoints = 500;
+
+	UPROPERTY(EditAnywhere, Category = "Tower Params")
+	int ShellDefense = 3;
+
+	UPROPERTY(EditAnywhere, Category = "Tower Params")
+	float AttackRange = 156.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Tower Params")
 	float ReloadInterval = 1.0f;
 
 protected:
