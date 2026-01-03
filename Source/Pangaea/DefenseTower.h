@@ -38,9 +38,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Pangaea|Defense Tower", meta = (DisplayName = "GetHP"))
 	int GetHealthPoints();
+
+	UFUNCTION(BlueprintCallable, Category = "Pangaea|Defense Tower")
 	bool IsDestroyed();
+
+	UFUNCTION(BlueprintCallable, Category = "Pangaea|Defense Tower")
 	bool CanFire();
+
 	void Fire();
 	void Hit(int damage);
 

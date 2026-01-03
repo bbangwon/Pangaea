@@ -25,3 +25,18 @@ void ADefenseTower::Tick(float DeltaTime)
 
 }
 
+int ADefenseTower::GetHealthPoints()
+{
+	return _HealthPoints;
+}
+
+bool ADefenseTower::IsDestroyed()
+{
+	return (_HealthPoints <= 0.0f);
+}
+
+bool ADefenseTower::CanFire()
+{
+	return (_ReloadCountingDown <= 0.0f);
+}
+

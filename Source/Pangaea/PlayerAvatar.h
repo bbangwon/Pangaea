@@ -44,9 +44,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Pangaea|PlayerCharacter", meta = (DisplayName = "Get HP"))
 	int GetHealthPoints();
+
+	UFUNCTION(BlueprintCallable, Category = "Pangaea|PlayerCharacter")
 	bool IsKilled();
+
+	UFUNCTION(BlueprintCallable, Category = "Pangaea|PlayerCharacter")
 	bool CanAttack();
+
 	void Attack();
 	void Hit(int damage);
 
