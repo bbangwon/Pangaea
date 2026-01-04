@@ -8,7 +8,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "DefenseTower.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class PANGAEA_API ADefenseTower : public AActor
 {
 	GENERATED_BODY()

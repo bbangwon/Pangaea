@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "PlayerAvatar.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class PANGAEA_API APlayerAvatar : public ACharacter
 {
 	GENERATED_BODY()
