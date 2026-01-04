@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "DefenseTower.generated.h"
 
 UCLASS()
@@ -52,4 +54,22 @@ public:
 
 protected:
 	void DestroyProcess();
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tower Component", meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* _BoxComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tower Component", meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* _MeshComponent;
+
+public:
+	FORCEINLINE UBoxComponent* GetBoxComponent() const
+	{
+		return _BoxComponent;
+	}
+
+	FORCEINLINE UStaticMeshComponent* GetMeshComponent() const
+	{
+		return _MeshComponent;
+	}
 };
