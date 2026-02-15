@@ -57,8 +57,6 @@ public:
 
 	void Attack();
 	void Hit(int damage);
-
-protected:
 	void DieProcess();
 
 private:

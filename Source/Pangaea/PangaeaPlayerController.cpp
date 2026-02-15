@@ -13,6 +13,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "Pangaea.h"
+#include "PlayerAvatar.h"
 
 APangaeaPlayerController::APangaeaPlayerController()
 {
@@ -51,6 +52,9 @@ void APangaeaPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Triggered, this, &APangaeaPlayerController::OnSetDestinationTriggered);
 			EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Completed, this, &APangaeaPlayerController::OnSetDestinationReleased);
 			EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Canceled, this, &APangaeaPlayerController::OnSetDestinationReleased);
+
+			//Attack input event
+			EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &APangaeaPlayerController::OnAttackTriggered);
 
 			// Setup touch input events
 			EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Started, this, &APangaeaPlayerController::OnInputStarted);
@@ -114,6 +118,15 @@ void APangaeaPlayerController::OnTouchReleased()
 {
 	bIsTouch = false;
 	OnSetDestinationReleased();
+}
+
+void APangaeaPlayerController::OnAttackTriggered()
+{
+	auto playerAvatar = Cast<APlayerAvatar>(GetPawn());
+	if(playerAvatar->CanAttack())
+	{
+		playerAvatar->Attack();
+	}
 }
 
 void APangaeaPlayerController::UpdateCachedDestination()

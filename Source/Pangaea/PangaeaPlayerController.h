@@ -49,6 +49,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> SetDestinationTouchAction;
 
+	/** Attack Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> AttackAction;
+
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
 
@@ -77,6 +81,8 @@ protected:
 	void OnSetDestinationReleased();
 	void OnTouchTriggered();
 	void OnTouchReleased();
+
+	void OnAttackTriggered();
 
 	/** Helper function to get the move destination */
 	void UpdateCachedDestination();
