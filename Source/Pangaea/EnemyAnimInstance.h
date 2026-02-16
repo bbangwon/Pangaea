@@ -25,10 +25,10 @@ class PANGAEA_API UEnemyAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, Category = "Enemy Params")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Params")
 	float Speed;
 
-	UPROPERTY(EditAnywhere, Category = "Enemy Params")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Params")
 	EEnemyState State;
 
 	UFUNCTION(BlueprintCallable)

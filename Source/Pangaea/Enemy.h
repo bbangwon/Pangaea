@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Perception/PawnSensingComponent.h"
 #include "Enemy.generated.h"
 
 UCLASS()
@@ -62,5 +61,6 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UPawnSensingComponent* PawnSensingComponent;
+	class UAIPerceptionComponent* AIPerceptionComponent;
+	class UAISenseConfig_Sight* SightConfig;
 };

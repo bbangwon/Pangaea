@@ -3,6 +3,8 @@
 
 #include "PlayerAvatar.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
 #include "PlayerAvatarAnimInstance.h"
 
 // Sets default values
@@ -36,6 +38,9 @@ APlayerAvatar::APlayerAvatar()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+	_stimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("Stimuli Source"));
+	_stimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());  // 시각 감지에 대한 자극원으로 등록
+	_stimuliSourceComponent->RegisterWithPerceptionSystem(); // AI 지각 시스템에 등록
 };
 
 // Called when the game starts or when spawned
@@ -91,6 +96,10 @@ bool APlayerAvatar::CanAttack()
 void APlayerAvatar::Attack()
 {
 	_AttackCountingDown = AttackInterval;
+}
+
+void APlayerAvatar::Hit(int damage)
+{
 }
 
 void APlayerAvatar::DieProcess()

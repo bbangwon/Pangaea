@@ -66,6 +66,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* _cameraComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI Perception", meta = (AllowPrivateAccess = "true"))
+	class UAIPerceptionStimuliSourceComponent* _stimuliSourceComponent;
+
 public:
 	FORCEINLINE USpringArmComponent* GetSpringArmComponent() const 
 	{
