@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "DefenseTower.generated.h"
 
@@ -57,15 +57,15 @@ protected:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tower Component", meta = (AllowPrivateAccess = "true"))
-	UBoxComponent* _BoxComponent;
+	USphereComponent* _SphereComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tower Component", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* _MeshComponent;
 
 public:
-	FORCEINLINE UBoxComponent* GetBoxComponent() const
+	FORCEINLINE USphereComponent* GetSphereComponent() const
 	{
-		return _BoxComponent;
+		return _SphereComponent;
 	}
 
 	FORCEINLINE UStaticMeshComponent* GetMeshComponent() const
