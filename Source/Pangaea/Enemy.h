@@ -39,6 +39,9 @@ protected:
 	float _AttackCountDown;
 	APawn* _chasedTarget = nullptr;
 
+	UClass* _WeaponClass;
+	class AWeapon* _Weapon;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

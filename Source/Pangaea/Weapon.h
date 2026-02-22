@@ -34,7 +34,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	bool IsWithinAttackRange(float AttackRange, AActor* Target);
+	bool IsWithinAttackRange(float AttackRange, AActor* Target);	
 
 	UFUNCTION()
 	void OnWeaponBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);

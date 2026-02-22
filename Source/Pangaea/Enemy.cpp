@@ -7,6 +7,8 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "EnemyAnimInstance.h"
 #include "EnemyController.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Weapon.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -28,6 +30,10 @@ AEnemy::AEnemy()
 
 	AIPerceptionComponent->ConfigureSense(*SightConfig); // 여러 감지를 사용하려면 배열로 저장해서 전달
 	AIPerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation()); // 우선적으로 사용할 감지 설정
+
+	// 무기 블루프린트 로드	
+	static ConstructorHelpers::FObjectFinder<UBlueprint> blueprint_finder(TEXT("Blueprint'/Game/TopDown/Blueprints/BP_Hammer.BP_Hammer'"));
+	_WeaponClass = blueprint_finder.Object->GeneratedClass;
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +41,10 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	_HealthPoints = HealthPoints;
+
+	_Weapon = Cast<AWeapon>(GetWorld()->SpawnActor(_WeaponClass));
+	_Weapon->Holder = this;
+	_Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("hand_rSocket"));
 }
 
 // Called every frame
