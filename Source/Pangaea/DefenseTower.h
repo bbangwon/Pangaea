@@ -34,7 +34,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	int _HealthPoints;
-	float _ReloadCountingDown;
+	float _ReloadCountingDown;	
+
+	class APlayerAvatar* _Target = nullptr;
+	UClass* _FireballClass = nullptr;
 
 public:	
 	// Called every frame
@@ -55,6 +58,12 @@ public:
 protected:
 	void DestroyProcess();
 
+	UFUNCTION()
+	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tower Component", meta = (AllowPrivateAccess = "true"))
 	USphereComponent* _SphereComponent;
@@ -72,4 +81,8 @@ public:
 	{
 		return _MeshComponent;
 	}
+
+	
+
+	
 };

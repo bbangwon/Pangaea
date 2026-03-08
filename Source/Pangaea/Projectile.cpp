@@ -2,6 +2,7 @@
 
 
 #include "Projectile.h"
+#include "PlayerAvatar.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -15,6 +16,7 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	_LifeCountingDown = Lifespan;
 	
 }
 
@@ -22,6 +24,34 @@ void AProjectile::BeginPlay()
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (_LifeCountingDown > 0.0f)
+	{
+		_LifeCountingDown -= DeltaTime;
+	}
+	else
+	{
+		PrimaryActorTick.bCanEverTick = false;
+		Destroy();
+	}
 
+	FVector CurrentLocation = GetActorLocation();
+	FVector Vel = GetActorRotation().RotateVector(FVector::ForwardVector) * Speed * DeltaTime;
+	FVector NextLocation = CurrentLocation + Vel;
+	SetActorLocation(NextLocation);
+
+	FHitResult HitResult;
+	FCollisionObjectQueryParams ObjCollisionQueryParams;
+	ObjCollisionQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_Pawn);
+
+	if (GetWorld()->LineTraceSingleByObjectType(HitResult, CurrentLocation, NextLocation, ObjCollisionQueryParams))
+	{
+		auto PlayerAvatar = Cast<APlayerAvatar>(HitResult.GetActor());
+		if (PlayerAvatar != nullptr)
+		{
+			PlayerAvatar->Hit(Damage);
+			PrimaryActorTick.bCanEverTick = false;
+			Destroy();
+		}
+	}
 }
 
