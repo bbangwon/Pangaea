@@ -6,9 +6,6 @@
 #include "GameFramework/Character.h"
 #include "PangaeaCharacter.generated.h"
 
-class UCameraComponent;
-class USpringArmComponent;
-
 /**
  *  A controllable top-down perspective character
  */
@@ -17,32 +14,47 @@ class APangaeaCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-private:
-
-	/** Top down camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCameraComponent> TopDownCameraComponent;
-
-	/** Camera boom positioning the camera above the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USpringArmComponent> CameraBoom;
-
 public:
-
-	/** Constructor */
 	APangaeaCharacter();
+
+	UPROPERTY(EditAnywhere, Category = "Pangaea Character Params")
+	int HealthPoints = 100;
+
+	UPROPERTY(EditAnywhere, Category = "Pangaea Character Params")
+	float Strength = 5;
+
+	UPROPERTY(EditAnywhere, Category = "Pangaea Character Params")
+	float Armer = 1;
+
+	UPROPERTY(EditAnywhere, Category = "Pangaea Character Params")
+	float AttackRange = 200.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Pangaea Character Params")
+	float AttackInterval = 3.0f;
 
 	/** Initialization */
 	virtual void BeginPlay() override;
 
 	/** Update */
-	virtual void Tick(float DeltaSeconds) override;
+	virtual void Tick(float DeltaTime) override;
 
-	/** Returns the camera component **/
-	UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent.Get(); }
+public:
+	UFUNCTION(BlueprintCallable, Category = "Pangaea|Character", meta = (DisplayName = "Get HP"))
+	int GetHealthPoints();
 
-	/** Returns the Camera Boom component **/
-	USpringArmComponent* GetCameraBoom() const { return CameraBoom.Get(); }
+	UFUNCTION(BlueprintCallable, Category = "Pangaea|Character")
+	bool IsKilled();
 
+	UFUNCTION(BlueprintCallable, Category = "Pangaea|PlayerCharacter")
+	bool CanAttack();
+	
+	virtual void Attack();
+	virtual void Hit(int damage);
+	virtual void DieProcess();
+
+protected:
+	int _HealthPoints;
+	float _AttackCountingDown;
+	class UPangaeaAnimInstance* _AnimInstance;
 };
 

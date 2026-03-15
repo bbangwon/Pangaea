@@ -6,6 +6,8 @@
 #include "Projectile.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/SphereComponent.h"
+#include "Weapon.h"
+#include "PangaeaCharacter.h"
 
 // Sets default values
 ADefenseTower::ADefenseTower()
@@ -98,5 +100,27 @@ void ADefenseTower::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	{
 		_Target = nullptr;
 	}
+}
+
+void ADefenseTower::OnMeshBeginOverlap(AActor* OtherActor)
+{
+	AWeapon* weapon = Cast<AWeapon>(OtherActor);
+	if (weapon == nullptr || weapon->Holder == nullptr)
+	{
+		return;
+	}
+
+	APlayerAvatar* playerAvatar = Cast<APlayerAvatar>(weapon->Holder);
+	if (playerAvatar != nullptr && 
+		playerAvatar->IsAttacking() &&
+		CanBeDamaged())
+	{
+		Hit(playerAvatar->Strength);
+	}
+}
+
+void ADefenseTower::Hit(int damage)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Defense Tower is hit! Damage: %d"), damage);
 }
 

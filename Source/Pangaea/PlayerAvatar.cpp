@@ -6,13 +6,11 @@
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
 #include "PlayerAvatarAnimInstance.h"
+#include "PangaeaAnimInstance.h"
 
 // Sets default values
 APlayerAvatar::APlayerAvatar()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	//카메라 스프링 암 생성
 	_springArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	_springArmComponent->SetupAttachment(RootComponent);
@@ -43,67 +41,7 @@ APlayerAvatar::APlayerAvatar()
 	_stimuliSourceComponent->RegisterWithPerceptionSystem(); // AI 지각 시스템에 등록
 };
 
-// Called when the game starts or when spawned
-void APlayerAvatar::BeginPlay()
+bool APlayerAvatar::IsAttacking()
 {
-	Super::BeginPlay();
-	
+	return false;
 }
-
-// Called every frame
-void APlayerAvatar::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	UPlayerAvatarAnimInstance* animInst = Cast<UPlayerAvatarAnimInstance>(GetMesh()->GetAnimInstance());
-	animInst->Speed = GetCharacterMovement()->Velocity.Size2D();
-
-	if (_AttackCountingDown == AttackInterval)
-	{
-		animInst->State = EPlayerState::Attack;
-	}
-
-	if (_AttackCountingDown > 0.0f)
-	{
-		_AttackCountingDown -= DeltaTime;
-	}
-
-}
-
-// Called to bind functionality to input
-void APlayerAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
-int APlayerAvatar::GetHealthPoints()
-{
-	return _HealthPoints;
-}
-
-bool APlayerAvatar::IsKilled()
-{
-	return (_HealthPoints <= 0.0f);
-}
-
-bool APlayerAvatar::CanAttack()
-{
-	UPlayerAvatarAnimInstance* animInst = Cast<UPlayerAvatarAnimInstance>(GetMesh()->GetAnimInstance());	
-	return (_AttackCountingDown <= 0.0f && animInst->State == EPlayerState::Locomotion);
-}
-
-void APlayerAvatar::Attack()
-{
-	_AttackCountingDown = AttackInterval;
-}
-
-void APlayerAvatar::Hit(int damage)
-{
-}
-
-void APlayerAvatar::DieProcess()
-{
-	Destroy();
-}
-

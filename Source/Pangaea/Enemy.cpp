@@ -9,13 +9,11 @@
 #include "EnemyController.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Weapon.h"
+#include "PangaeaAnimInstance.h"
 
 // Sets default values
 AEnemy::AEnemy()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception"));
 
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
@@ -40,8 +38,6 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	_HealthPoints = HealthPoints;
-
 	_Weapon = Cast<AWeapon>(GetWorld()->SpawnActor(_WeaponClass));
 	_Weapon->Holder = this;
 	_Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("hand_rSocket"));
@@ -52,46 +48,16 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);	
 
-	auto animInst = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	animInst->Speed = GetCharacterMovement()->Velocity.Size2D();
-
-	if (_AttackCountDown == AttackInterval)
-	{
-		animInst->State = EEnemyState::Attack;
-	}
-
-	if (_AttackCountDown > 0.0f)
-	{
-		_AttackCountDown -= DeltaTime;
-	}
-
-	if (_chasedTarget != nullptr && animInst->State == EEnemyState::Locomotion)
+	if (_chasedTarget != nullptr && _AnimInstance->State == ECharacterState::Locomotion)
 	{
 		auto enemyController = Cast<AEnemyController>(GetController());
 		enemyController->MakeAttackDecision(_chasedTarget);
 	}
 }
 
-int AEnemy::GetHealthPoints()
-{
-	return _HealthPoints;
-}
-
-bool AEnemy::IsKilled()
-{
-	return (_HealthPoints <= 0.0f);
-}
-
-bool AEnemy::CanAttack()
-{	
-	auto enemyAnimInst = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	return (_AttackCountDown <= 0.0f) && (enemyAnimInst->State == EEnemyState::Locomotion);
-}
-
 void AEnemy::Chase(APawn* targetPawn)
 {	
-	auto enemyAnimInst = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	if (targetPawn != nullptr && enemyAnimInst->State == EEnemyState::Locomotion)
+	if (targetPawn != nullptr && _AnimInstance->State == ECharacterState::Locomotion)
 	{
 		auto enemyController = Cast<AEnemyController>(GetController());
 		enemyController->MoveToActor(targetPawn, 90.f);
@@ -101,25 +67,12 @@ void AEnemy::Chase(APawn* targetPawn)
 
 void AEnemy::Attack()
 {
-	GetController()->StopMovement();
-	_AttackCountDown = AttackInterval;
-}
-
-void AEnemy::Hit(int damage)
-{
-	_HealthPoints -= damage;
-
-	auto enemyAnimInst = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	enemyAnimInst->State = EEnemyState::Hit;
-
-	if (IsKilled())
-	{
-		DieProcess();
-	}
+	Super::Attack();
+	GetController()->StopMovement();	
 }
 
 void AEnemy::DieProcess()
 {
-	Destroy();
+	Super::DieProcess();
+	_Weapon->Destroy();
 }
-
