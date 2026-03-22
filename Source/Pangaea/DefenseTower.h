@@ -39,6 +39,8 @@ protected:
 	class APlayerAvatar* _Target = nullptr;
 	UClass* _FireballClass = nullptr;
 
+	class APangaeaGameMode* _GameMode = nullptr;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

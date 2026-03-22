@@ -8,6 +8,8 @@
 #include "Components/SphereComponent.h"
 #include "Weapon.h"
 #include "PangaeaCharacter.h"
+#include "PangaeaGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ADefenseTower::ADefenseTower()
@@ -25,7 +27,7 @@ ADefenseTower::ADefenseTower()
 	if (blueprint_finder.Succeeded())
 	{
 		_FireballClass = blueprint_finder.Object->GeneratedClass;
-	}
+	}	
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +38,8 @@ void ADefenseTower::BeginPlay()
 	// 이벤트 함수 등록
 	_SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ADefenseTower::OnBeginOverlap);
 	_SphereComponent->OnComponentEndOverlap.AddDynamic(this, &ADefenseTower::OnEndOverlap);
+
+	_GameMode = Cast<APangaeaGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 
 }
 
@@ -75,7 +79,8 @@ bool ADefenseTower::CanFire()
 
 void ADefenseTower::Fire()
 {
-	auto Fireball = Cast<AProjectile>(GetWorld()->SpawnActor(_FireballClass));
+	
+	auto Fireball = _GameMode->SpawnOrGetFireball(_FireballClass); //Cast<AProjectile>(GetWorld()->SpawnActor(_FireballClass));
 	FVector StartLocation = GetActorLocation();
 	StartLocation.Z += 100.0f; // 발사 위치를 타워보다 약간 위로 설정
 	FVector TargetLocation = _Target->GetActorLocation();

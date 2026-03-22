@@ -3,20 +3,23 @@
 
 #include "Projectile.h"
 #include "PlayerAvatar.h"
+#include "PangaeaGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectile::AProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	_LifeCountingDown = Lifespan;
+
+	_GameMode = Cast<APangaeaGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	Reset();
 	
 }
 
@@ -30,8 +33,8 @@ void AProjectile::Tick(float DeltaTime)
 	}
 	else
 	{
-		PrimaryActorTick.bCanEverTick = false;
-		Destroy();
+		_GameMode->RecycleFireball(this);
+		//Destroy();
 	}
 
 	FVector CurrentLocation = GetActorLocation();
@@ -49,9 +52,16 @@ void AProjectile::Tick(float DeltaTime)
 		if (PlayerAvatar != nullptr)
 		{
 			PlayerAvatar->Hit(Damage);
-			PrimaryActorTick.bCanEverTick = false;
-			Destroy();
+			//Destroy();
+			_GameMode->RecycleFireball(this);
 		}
 	}
 }
 
+void AProjectile::Reset()
+{
+	_LifeCountingDown = Lifespan;
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
+	SetActorTickEnabled(true);
+}

@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Projectile.h"
 #include "PangaeaGameMode.generated.h"
+
 
 /**
  *  Simple Game Mode for a top-down perspective game
@@ -20,6 +22,13 @@ public:
 
 	/** Constructor */
 	APangaeaGameMode();
+	virtual ~APangaeaGameMode();
+
+	AProjectile* SpawnOrGetFireball(UClass* ProjectileClass);
+	void RecycleFireball(AProjectile* Projectile);
+
+protected:
+	TQueue<AProjectile*, EQueueMode::Spsc> _FireballPool;
 };
 
 
