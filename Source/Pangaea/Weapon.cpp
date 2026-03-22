@@ -4,6 +4,7 @@
 #include "Weapon.h"
 #include "GameFramework/Character.h"
 #include "PlayerAvatar.h"
+#include "DefenseTower.h"
 
 
 // Sets default values
@@ -45,40 +46,55 @@ bool AWeapon::IsWithinAttackRange(float AttackRange, AActor* Target)
 
 void AWeapon::OnWeaponBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	auto character = Cast<ACharacter>(OtherActor);
-	if (character == nullptr)
+	auto Character = Cast<APangaeaCharacter>(OtherActor);
+	if (Character == nullptr)
 	{
 		return;
 	}
 	if (Holder == nullptr)
 	{
-
-		Holder = Cast<APlayerAvatar>(character);
-		if (Holder == nullptr)
+		auto PlayerAvatar = Cast<APlayerAvatar>(Character);
+		if (PlayerAvatar != nullptr)
+		{
+			Holder = PlayerAvatar;			
+			PlayerAvatar->DropWeapon();
+			PlayerAvatar->AttactWeapon(this);
+		}
+		else
 		{
 			return;
-		}
-
-		TArray<AActor*> attachedActors;
-		Holder->GetAttachedActors(attachedActors);
-
-		for (int i = 0; i < attachedActors.Num(); i++)
-		{
-			AWeapon* weapon = Cast<AWeapon>(attachedActors[i]);
-			weapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-
-			auto location = weapon->GetActorLocation();
-			location.Z = 50.0f;
-			weapon->SetActorLocationAndRotation(location, FQuat::Identity);
-
-			weapon->Holder = nullptr;
-		}
-
-		AttachToComponent(character->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("hand_rSocket"));
+		}		
 	}
-	else if (IsWithinAttackRange(0.0f, OtherActor))
+	else if(Character != Holder && 
+		IsWithinAttackRange(0.0f, OtherActor) &&
+		Character->CanBeDamaged() &&
+		Holder->IsAttacking())
 	{
-		// 공격 로직 구현
+		//적이 공격
+		Character->Hit(Holder->Strength);
+		if (Character->IsA(APlayerAvatar::StaticClass()))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Hit PlayerAvatar"));
+			UE_LOG(LogTemp, Log, TEXT("Hit PlayerAvatar"));
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Hit Enemy"));
+			UE_LOG(LogTemp, Log, TEXT("Hit Enemy"));
+		}
+	}
+	else if (Holder != nullptr &&
+		Holder->IsA(APangaeaCharacter::StaticClass()) &&
+		Holder->IsAttacking())
+	{
+		auto tower = Cast<ADefenseTower>(OtherActor);
+		if (tower != nullptr &&
+			tower->CanBeDamaged() &&
+			IsWithinAttackRange(0.0f, tower))
+		{
+			tower->Hit(Strength);
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Hit DefenseTower"));
+		}
 	}
 }
 

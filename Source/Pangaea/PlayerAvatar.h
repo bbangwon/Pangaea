@@ -18,7 +18,8 @@ public:
 	APlayerAvatar();
 
 public:	
-	bool IsAttacking();
+	void DropWeapon();
+	void AttactWeapon(class AWeapon* Weapon);
 
 public:
 	FORCEINLINE USpringArmComponent* GetSpringArmComponent() const 

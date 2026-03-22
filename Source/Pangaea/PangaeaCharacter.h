@@ -48,6 +48,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pangaea|PlayerCharacter")
 	bool CanAttack();
 	
+	bool IsAttacking();
 	virtual void Attack();
 	virtual void Hit(int damage);
 	virtual void DieProcess();

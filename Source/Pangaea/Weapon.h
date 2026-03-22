@@ -18,7 +18,7 @@ public:
 	AWeapon();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	ACharacter* Holder = nullptr;
+	class APangaeaCharacter* Holder = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	float Strength = 10.0f;

@@ -7,6 +7,7 @@
 #include "Perception/AISense_Sight.h"
 #include "PlayerAvatarAnimInstance.h"
 #include "PangaeaAnimInstance.h"
+#include "Weapon.h"
 
 // Sets default values
 APlayerAvatar::APlayerAvatar()
@@ -41,7 +42,25 @@ APlayerAvatar::APlayerAvatar()
 	_stimuliSourceComponent->RegisterWithPerceptionSystem(); // AI 지각 시스템에 등록
 };
 
-bool APlayerAvatar::IsAttacking()
+void APlayerAvatar::DropWeapon()
 {
-	return false;
+	TArray<AActor*> attachedActors;
+	GetAttachedActors(attachedActors);
+
+	for (int i = 0; i < attachedActors.Num(); i++)
+	{
+		AWeapon* weapon = Cast<AWeapon>(attachedActors[i]);
+		weapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
+		auto location = weapon->GetActorLocation();
+		location.Z = 50.0f;
+		weapon->SetActorLocationAndRotation(location, FQuat::Identity);
+
+		weapon->Holder = nullptr;
+	}
+}
+
+void APlayerAvatar::AttactWeapon(AWeapon* Weapon)
+{
+	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("hand_rSocket"));
 }

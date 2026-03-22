@@ -50,6 +50,11 @@ bool APangaeaCharacter::IsKilled()
 	return (_HealthPoints <= 0.0f);
 }
 
+bool APangaeaCharacter::IsAttacking()
+{
+	return false;
+}
+
 bool APangaeaCharacter::CanAttack()
 {
 	return (_AttackCountingDown <= 0.0f && _AnimInstance->State == ECharacterState::Locomotion);
