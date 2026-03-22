@@ -13,4 +13,8 @@ void AEnemyController::MakeAttackDecision(APawn* targetPawn)
 	{
 		controlledCharacter->Attack();
 	}
+	else if (dist > controlledCharacter->AttackRange)
+	{
+		controlledCharacter->Chase(targetPawn);
+	}
 }

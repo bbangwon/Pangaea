@@ -52,7 +52,7 @@ bool APangaeaCharacter::IsKilled()
 
 bool APangaeaCharacter::IsAttacking()
 {
-	return false;
+	return _AnimInstance->State == ECharacterState::Attack;
 }
 
 bool APangaeaCharacter::CanAttack()
@@ -66,9 +66,11 @@ void APangaeaCharacter::Attack()
 }
 
 void APangaeaCharacter::Hit(int damage)
-{
+{	
 	_HealthPoints -= damage;
 	_AnimInstance->State = ECharacterState::Hit;
+
+	UE_LOG(LogTemp, Warning, TEXT("Character hit! Current HP: %d"), _HealthPoints);
 
 	if (IsKilled())
 	{

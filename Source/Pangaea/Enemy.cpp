@@ -10,6 +10,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Weapon.h"
 #include "PangaeaAnimInstance.h"
+#include "AIController.h"
+#include "Navigation/PathFollowingComponent.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -58,9 +60,21 @@ void AEnemy::Tick(float DeltaTime)
 void AEnemy::Chase(APawn* targetPawn)
 {	
 	if (targetPawn != nullptr && _AnimInstance->State == ECharacterState::Locomotion)
-	{
+	{		
 		auto enemyController = Cast<AEnemyController>(GetController());
-		enemyController->MoveToActor(targetPawn, 90.f);
+		if (enemyController == nullptr)
+		{
+			return;
+		}
+		if (enemyController->GetMoveStatus() == EPathFollowingStatus::Idle)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Chase start target: %s"), *targetPawn->GetName());
+			enemyController->MoveToActor(targetPawn, 90.f);
+		}			
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Target is null or not in locomotion state"));
 	}
 	_chasedTarget = targetPawn;	
 }

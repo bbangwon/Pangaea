@@ -40,6 +40,7 @@ void ADefenseTower::BeginPlay()
 	_SphereComponent->OnComponentEndOverlap.AddDynamic(this, &ADefenseTower::OnEndOverlap);
 
 	_GameMode = Cast<APangaeaGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	_HealthPoints = HealthPoints;
 
 }
 
@@ -74,7 +75,8 @@ bool ADefenseTower::IsDestroyed()
 
 bool ADefenseTower::CanFire()
 {
-	return (_ReloadCountingDown <= 0.0f);
+	return false;
+	//return (_ReloadCountingDown <= 0.0f);
 }
 
 void ADefenseTower::Fire()
@@ -89,6 +91,8 @@ void ADefenseTower::Fire()
 	Fireball->SetActorLocation(StartLocation);
 	Fireball->SetActorRotation(Rotation);
 }
+
+
 
 void ADefenseTower::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -127,5 +131,18 @@ void ADefenseTower::OnMeshBeginOverlap(AActor* OtherActor)
 void ADefenseTower::Hit(int damage)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Defense Tower is hit! Damage: %d"), damage);
+	_HealthPoints -= damage;
+
+	UE_LOG(LogTemp, Warning, TEXT("Defense Tower is hit! Current HP: %d"), _HealthPoints);
+
+	if (IsDestroyed())
+	{
+		DestroyProcess();
+	}
+}
+
+void ADefenseTower::DestroyProcess()
+{
+	Destroy();
 }
 
