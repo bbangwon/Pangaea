@@ -21,6 +21,9 @@ public:
 	void DropWeapon();
 	void AttactWeapon(class AWeapon* Weapon);
 
+	UFUNCTION(Server, Reliable)
+	void AttackRpc();
+
 public:
 	FORCEINLINE USpringArmComponent* GetSpringArmComponent() const 
 	{

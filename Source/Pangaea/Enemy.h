@@ -31,7 +31,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pangaea|Enemy")
 	void Chase(APawn* targetPawn);
 
-	void Attack() override;
 	void DieProcess() override;
 	
 

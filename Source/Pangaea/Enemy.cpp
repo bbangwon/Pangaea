@@ -79,12 +79,6 @@ void AEnemy::Chase(APawn* targetPawn)
 	_chasedTarget = targetPawn;	
 }
 
-void AEnemy::Attack()
-{
-	Super::Attack();
-	GetController()->StopMovement();	
-}
-
 void AEnemy::DieProcess()
 {
 	Super::DieProcess();

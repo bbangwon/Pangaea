@@ -64,3 +64,8 @@ void APlayerAvatar::AttactWeapon(AWeapon* Weapon)
 {
 	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("hand_rSocket"));
 }
+
+void APlayerAvatar::AttackRpc_Implementation()
+{
+	AttackBroadcastRpc();
+}

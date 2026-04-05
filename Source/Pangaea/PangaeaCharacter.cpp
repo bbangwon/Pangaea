@@ -82,3 +82,8 @@ void APangaeaCharacter::DieProcess()
 {
 	Destroy();
 }
+
+void APangaeaCharacter::AttackBroadcastRpc_Implementation()
+{
+	Attack();
+}

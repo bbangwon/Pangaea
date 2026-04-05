@@ -53,6 +53,9 @@ public:
 	virtual void Hit(int damage);
 	virtual void DieProcess();
 
+	UFUNCTION(NetMulticast, Reliable)
+	void AttackBroadcastRpc();
+
 protected:
 	int _HealthPoints;
 	float _AttackCountingDown;
