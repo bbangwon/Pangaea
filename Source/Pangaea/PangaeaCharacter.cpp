@@ -11,10 +11,12 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 #include "PangaeaAnimInstance.h"
+#include "Net/UnrealNetwork.h"
 
 APangaeaCharacter::APangaeaCharacter()
 {	
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
 }
 
 void APangaeaCharacter::BeginPlay()
@@ -87,3 +89,10 @@ void APangaeaCharacter::AttackBroadcastRpc_Implementation()
 {
 	Attack();
 }
+
+void APangaeaCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(APangaeaCharacter, _HealthPoints);
+}
+

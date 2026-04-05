@@ -56,8 +56,12 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void AttackBroadcastRpc();
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
+	UPROPERTY(Replicated)
 	int _HealthPoints;
+
 	float _AttackCountingDown;
 	class UPangaeaAnimInstance* _AnimInstance;
 };
