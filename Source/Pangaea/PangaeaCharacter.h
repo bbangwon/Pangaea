@@ -56,11 +56,17 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void AttackBroadcastRpc();
 
+	UFUNCTION()
+	void OnHealthPointsChanged();
+
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 protected:
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnHealthPointsChanged)
 	int _HealthPoints;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UUserWidget* HealthBarWidget;
 
 	float _AttackCountingDown;
 	class UPangaeaAnimInstance* _AnimInstance;

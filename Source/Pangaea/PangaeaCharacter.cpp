@@ -12,6 +12,7 @@
 #include "Engine/World.h"
 #include "PangaeaAnimInstance.h"
 #include "Net/UnrealNetwork.h"
+#include "HealthBarWidget.h"
 
 APangaeaCharacter::APangaeaCharacter()
 {	
@@ -23,7 +24,7 @@ void APangaeaCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	_AnimInstance = Cast<UPangaeaAnimInstance>(GetMesh()->GetAnimInstance());
-	_HealthPoints = HealthPoints;
+	_HealthPoints = HealthPoints;	
 }
 
 void APangaeaCharacter::Tick(float DeltaTime)
@@ -69,14 +70,16 @@ void APangaeaCharacter::Attack()
 
 void APangaeaCharacter::Hit(int damage)
 {	
-	_HealthPoints -= damage;
-	_AnimInstance->State = ECharacterState::Hit;
-
-	UE_LOG(LogTemp, Warning, TEXT("Character hit! Current HP: %d"), _HealthPoints);
-
 	if (IsKilled())
 	{
-		DieProcess();
+		return;
+	}
+
+	if (GetNetMode() == ENetMode::NM_Client
+		&& HasAuthority())
+	{
+		_HealthPoints -= damage;
+		OnHealthPointsChanged();
 	}
 }
 
@@ -88,6 +91,28 @@ void APangaeaCharacter::DieProcess()
 void APangaeaCharacter::AttackBroadcastRpc_Implementation()
 {
 	Attack();
+}
+
+void APangaeaCharacter::OnHealthPointsChanged()
+{
+	if (HealthBarWidget != nullptr)
+	{
+		float normalizedHealth = FMath::Clamp(
+			(float)_HealthPoints / HealthPoints, 0.0f, 1.0f);
+
+		auto healthBar = Cast<UHealthBarWidget>(HealthBarWidget);
+		healthBar->HealthProgressBar->SetPercent(normalizedHealth);
+	}
+
+	if (_AnimInstance)
+	{
+		_AnimInstance->State = ECharacterState::Hit;
+	}
+
+	if (IsKilled())
+	{
+		PrimaryActorTick.bCanEverTick = false;
+	}
 }
 
 void APangaeaCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

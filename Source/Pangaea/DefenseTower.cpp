@@ -49,7 +49,7 @@ void ADefenseTower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	if (_Target != nullptr)
+	if (_Target != nullptr && GetNetMode() != NM_Client)
 	{
 		if (CanFire())
 		{
@@ -75,8 +75,8 @@ bool ADefenseTower::IsDestroyed()
 
 bool ADefenseTower::CanFire()
 {
-	return false;
-	//return (_ReloadCountingDown <= 0.0f);
+	//return false;
+	return (_ReloadCountingDown <= 0.0f);
 }
 
 void ADefenseTower::Fire()
