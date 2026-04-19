@@ -9,6 +9,7 @@
 #include "Weapon.h"
 #include "PangaeaCharacter.h"
 #include "PangaeaGameMode.h"
+#include "PangaeaGameState.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -68,7 +69,7 @@ int ADefenseTower::GetHealthPoints()
 	return _HealthPoints;
 }
 
-bool ADefenseTower::IsDestroyed()
+bool ADefenseTower::IsKilled()
 {
 	return (_HealthPoints <= 0.0f);
 }
@@ -130,14 +131,30 @@ void ADefenseTower::OnMeshBeginOverlap(AActor* OtherActor)
 
 void ADefenseTower::Hit(int damage)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Defense Tower is hit! Damage: %d"), damage);
-	_HealthPoints -= damage;
-
-	UE_LOG(LogTemp, Warning, TEXT("Defense Tower is hit! Current HP: %d"), _HealthPoints);
-
-	if (IsDestroyed())
+	if(IsKilled())
 	{
-		DestroyProcess();
+		return;
+	}
+
+	if (GetNetMode() == ENetMode::NM_ListenServer && HasAuthority())
+	{
+		_HealthPoints -= damage;
+		//OnHealthPointsChanged();
+
+		UE_LOG(LogTemp, Warning, TEXT("Defense Tower is hit! Damage: %d, Current HP: %d"), damage, _HealthPoints);
+
+		if (_HealthPoints <= 0)
+		{
+			if (IsBase)
+			{
+				APangaeaGameState* gameState = Cast<APangaeaGameState>(UGameplayStatics::GetGameState(GetWorld()));
+				gameState->OnGameWin();
+			}
+			else
+			{
+				DestroyProcess();
+			}
+		}
 	}
 }
 

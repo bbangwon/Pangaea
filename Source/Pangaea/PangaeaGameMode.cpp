@@ -1,11 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "PangaeaGameMode.h"
-#include "PangaeaPlayerController.h"
+#include "GameFramework/PlayerController.h"
+#include "PangaeaGameState.h"
 
 APangaeaGameMode::APangaeaGameMode()
 {
-	PlayerControllerClass = APangaeaPlayerController::StaticClass();
 	// stub
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/TopDown/Blueprints/BP_PlayerAvatar"));
 	if (PlayerPawnBPClass.Class != nullptr)
@@ -18,6 +18,8 @@ APangaeaGameMode::APangaeaGameMode()
 	{
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
+
+	GameStateClass = APangaeaGameState::StaticClass();
 }
 
 APangaeaGameMode::~APangaeaGameMode()

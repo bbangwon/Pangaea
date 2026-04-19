@@ -29,6 +29,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Tower Params")
 	float ReloadInterval = 1.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Tower Params")
+	bool IsBase = false;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -49,7 +52,7 @@ public:
 	int GetHealthPoints();
 
 	UFUNCTION(BlueprintCallable, Category = "Pangaea|Defense Tower")
-	bool IsDestroyed();
+	bool IsKilled();
 
 	UFUNCTION(BlueprintCallable, Category = "Pangaea|Defense Tower")
 	bool CanFire();
@@ -86,8 +89,4 @@ public:
 	{
 		return _MeshComponent;
 	}
-
-	
-
-	
 };
