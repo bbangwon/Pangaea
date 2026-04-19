@@ -13,5 +13,15 @@ UCLASS()
 class PANGAEA_API UPangaeaGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Pangaea")
+	void StartListenServer();
+
+	UFUNCTION(BlueprintCallable, Category = "Pangaea")
+	void JoinAsClient(const FString& IpAddress);
+
+	UFUNCTION(BlueprintCallable, Category = "Pangaea")
+	void LeaveGame();
 	
 };
