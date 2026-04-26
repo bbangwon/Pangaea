@@ -32,6 +32,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Tower Params")
 	bool IsBase = false;
 
+	UPROPERTY(EditAnywhere, Category = "Tower Params")
+	TSubclassOf<class AProjectile> FireballClass;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,8 +43,6 @@ protected:
 	float _ReloadCountingDown;	
 
 	class APlayerAvatar* _Target = nullptr;
-	UClass* _FireballClass = nullptr;
-
 	class APangaeaGameMode* _GameMode = nullptr;
 
 public:	

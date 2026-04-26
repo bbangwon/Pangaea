@@ -20,8 +20,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	APawn* _chasedTarget = nullptr;
-
-	UClass* _WeaponClass;
 	class AWeapon* _Weapon;
 
 public:	
@@ -32,10 +30,12 @@ public:
 	void Chase(APawn* targetPawn);
 
 	void DieProcess() override;
-	
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UAIPerceptionComponent* AIPerceptionComponent;
 	class UAISenseConfig_Sight* SightConfig;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AWeapon> WeaponClass;
 };
